@@ -42,7 +42,7 @@ const News = (props) => {
     let data = await fetch(url)
     setPage(page + 1)
     let parsedData = await data.json()
-    setArticles(articles.concat(parsedData.articles))
+    setArticles(articles?.concat(parsedData.articles))
     setTotalResults(parsedData.totalResults)
   }
 
@@ -54,30 +54,33 @@ const News = (props) => {
       >
         NewsMonkey-Top {capitalizeFirstLetter(props.category)} Headlines
       </h1>
-      {loading && <Spinner />}
+      {loading && articles.length !== 0 && <Spinner />}
       <InfiniteScroll
-        dataLength={articles.length}
+        dataLength={articles?.length}
         next={fetchMoreData}
-        hasMore={articles.length !== totalResults}
+        hasMore={articles?.length !== totalResults}
         loader={<Spinner />}
       >
         <div className="container">
           <div className="row">
-            {articles.map((element) => {
-              return (
-                <div className="col-md-4" key={element.url}>
-                  <NewsItem
-                    title={element.title ? element.title : ''}
-                    description={element.description ? element.description : ''}
-                    imageUrl={element.urlToImage}
-                    newsUrl={element.url}
-                    author={element.author}
-                    date={element.publishedAt}
-                    source={element.source.name}
-                  />
-                </div>
-              )
-            })}
+            {articles &&
+              articles.map((element) => {
+                return (
+                  <div className="col-md-4" key={element.url}>
+                    <NewsItem
+                      title={element.title ? element.title : ''}
+                      description={
+                        element.description ? element.description : ''
+                      }
+                      imageUrl={element.urlToImage}
+                      newsUrl={element.url}
+                      author={element.author}
+                      date={element.publishedAt}
+                      source={element.source.name}
+                    />
+                  </div>
+                )
+              })}
           </div>
         </div>
       </InfiniteScroll>
